@@ -47,14 +47,14 @@ body {
 }
 
 form {
-    padding: 20px;
+    padding-top: 20px;
     padding-left: 0;
     margin-bottom: 20px;
 }
 
 form input[type=text] {
     margin-right: 10px;
-    width: 70%;
+    width: 85%;
     font-size: 12px;
     padding: 5px;
 }
@@ -81,4 +81,38 @@ form input[type=text] {
 
 .spinner img {
     padding: 10px;
+}
+
+.rooms {
+    width:30%;
+}
+
+.roomOption {
+    width:50%;
+}
+
+.message {
+    padding: 5px;
+    border-radius: 4px;
+    background-color: rgb(239, 239, 239);
+    box-shadow: 0 1px 1px #aaa;
+}
+
+#message {
+
+}
+
+.messageGroup {
+    padding: 10px;
+    margin: 5px;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px #aaa;
+}
+#submit {
+    float:right;
+    margin-top: -23px;
+}
+#send {
+
 }

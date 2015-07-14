@@ -1,13 +1,14 @@
 // YOUR CODE HERE:
 var app = {};
 
+app.rooms = {};
+app.friends = [];
 
 app.init = function(){
     this.server = 'https://api.parse.com/1/classes/chatterbox';
     this.fetch();
-    setInterval(this.fetch, 5000);
+    setInterval(this.fetch, 1000);
 };
-
 
 //SENDING MESSAGE
 app.send = function (message) {
@@ -25,8 +26,6 @@ app.send = function (message) {
   });
 };
 
-
-//FETCHING ALL THE MESSAGE AND THE ROOMS
 app.fetch = function () {
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
@@ -38,8 +37,6 @@ app.fetch = function () {
   });
 };
 
-
-//CLEAR ALL THE MESSAGE IN THE CHAT AREA
 app.clearMessages = function() {
     $('.message').empty();
 };
@@ -47,19 +44,19 @@ app.clearMessages = function() {
 //ADDING MESSAGE TO THE CHAT AREA USING APPEND
 app.addMessage =  function(message){
 
-      //first append the empty div to #chats and .message
-      $('#chats').append('<div class="message"></div>');
-      $('.message').append('<span class="username"></span>');
-      $('.message').append('<span class="text"></span>');
+  //first append the empty div to #chats and .message
+  $('#chats').append('<div class="message"></div>');
+  $('.message').append('<span class="username"></span>');
+  $('.message').append('<span class="text"></span>');
 
-      //fill in the text
-      $('.username').text(message.username);
-      $('.text').text(message.text);
+  //fill in the text
+  $('.username').text(message.username);
+  $('.text').text(message.text);
 };
 
 //ADDING A NEW ROOM TO THE OPTION DROPDOWN
 app.addRoom =  function(roomname){
-    $('#roomSelect').append($('<option>', {
+    $('.rooms').append($('<option>', {
       value: roomname,
       text: roomname
     }));
@@ -67,64 +64,63 @@ app.addRoom =  function(roomname){
 
 //ADDING NEW FRIENDS TO LIST OF FRIEND
 app.addFriend =  function(username){
-    //first append the empty div
-    $('.friendsList').append('<div class="friend"></div>');
+  //first append the empty div
+  $('.friendsList').append('<div class="friend"></div>');
 
-    //fill in the value
-    $('.friend').text(username);
+  //fill in the value
+  $('.friend').text(username);
 };
 
 //HANDLING SUBMIT, PRODUCTING MESSAGE OBJECT AND INVOKE SEND()
 app.handleSubmit =  function(username, text, room){
-    var newMsg = {
-      username: username,
-      text : text,
-      roomname: room
-    };
-    this.send(newMsg);
+  var newMsg = {
+    username: username,
+    text : text,
+    roomname: room
+  };
+  this.send(newMsg);
 };
 
-var rooms = {};
-var users = {};
-
 var packageAndDisplay = function(data, userName){
-          displayMessage(data, userName);
-          displayRoom();
+  displayMessage(data, userName);
+  displayRoom();
 };
 
 
 var displayMessage = function(data){
-      if (data.results) {
-      app.clearMessages();
-      
-      for(var i=0; i<data.results.length; i++){
-          if (!rooms[data.results[i].roomname]) {
-            rooms[data.results[i].roomname] = [];
-          }
-
-          rooms[data.results[i].roomname].push({username: data.results[i].username, text: data.results[i].text});
-          // $('#chats').append('<div class="message"></div>');
-          if(data.results[i].username) {
-            $('.message').append('<div class="username"></div>')
-            $('.message').append('<div class="text"></div>');
-            $('.username').last().text(data.results[i].username);
-            $('.text').last().text(data.results[i].text); 
-          }
-        }
+  if (data.results) {
+  app.clearMessages();
+  
+  for(var i=0; i<data.results.length; i++){
+      if (!app.rooms[data.results[i].roomname]) {
+        app.rooms[data.results[i].roomname] = [];
       }
+
+      app.rooms[data.results[i].roomname].push({
+        username: data.results[i].username, 
+        text: data.results[i].text
+      });
+
+      if(data.results[i].username) {
+        $('.message').append('<div class="messageGroup"></div>');
+        $('.messageGroup').last().append('<span class="username"></span>');
+        $('.messageGroup').last().append('<span>: </span>');
+        $('.messageGroup').last().append('<span class="text"></span>');
+        $('.username').last().text(data.results[i].username);
+        $('.text').last().text(data.results[i].text); 
+      }
+    }
+  }
 };
 
-
 var displayRoom = function(){
-      $('.rooms').children().remove()
-      $('#roomSelect').children().remove();
-      for (var room in rooms) {
-        app.addRoom(room);
-        $('.rooms').append('<div class="room"></div>');
-        $('.room').last().text(room);
-      }
+  $('.rooms').children().remove();
+  for (var room in app.rooms) {
+    app.addRoom(room);
+    $('.rooms').append('<option class="room"></option>');
+    $('.room').last().text(room);
+  }
 }
-
 
 $(document).ready(function() {
 
@@ -142,14 +138,14 @@ $(document).ready(function() {
 
   $('#send').on('submit', function(e){
     e.preventDefault();
-    var roomValue = $('#roomSelect').val();
+    var roomValue = $('.rooms').val();
     
     if($('#room').val()){
       roomValue = $('#room').val();
       app.addRoom(roomValue);
     }
 
-    app.handleSubmit($('#username').val(), $('#message').val(), roomValue);
+    app.handleSubmit(decodeURI(GetUrlValue('username')), $('#message').val(), roomValue);
     console.log("submitted");
     $('#name').val("");
     $('#message').val("");
@@ -168,6 +164,15 @@ $(document).ready(function() {
       }
     });
   };
-
-
 });
+
+var GetUrlValue = function (VarSearch){
+  var SearchString = window.location.search.substring(1);
+  var VariableArray = SearchString.split('&');
+  for(var i = 0; i < VariableArray.length; i++){
+    var KeyValuePair = VariableArray[i].split('=');
+    if(KeyValuePair[0] == VarSearch){
+        return KeyValuePair[1];
+    }
+  }
+}
