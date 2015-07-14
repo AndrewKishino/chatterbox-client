@@ -20,7 +20,7 @@ app.init = function(){
   $('#send .submit').on('submit', function(){
     var newMessage = {
       username: app.user,
-      text: $('#message').val(),
+      text: $('#messages').val(),
       roomname: 'lobby'
     };
     app.handleSubmit(newMessage);
@@ -44,9 +44,9 @@ app.addMessage = function(message){
   $('#chats').append(
     '<div class = "messagebox">'
     + '<p class = "username">' 
-    + this.username + '</p>' 
+    + username + '</p>' 
     + '<p class = "message">' 
-    + this.message + '</p>' 
+    + text + '</p>' 
     + '</div>');
   // $('#chats').append('<div class = "message" "' + username +'">' + username + ': ' + text + '</div>');
 
@@ -93,7 +93,7 @@ app.fetch = function(room){
         data : parameters,
         contentType: 'application/json',
         success: function (responsedata){
-          // app.displayData(responsedata);
+          app.displayData(responsedata);
         },
         error: function (data) {
           // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -119,7 +119,7 @@ app.fetch = function(room){
 
 var messageObj = {
   username : $('.username').text(),
-  text : $('#message').text(),
+  text : $('#messages').text(),
   roomname : $(".roomSelect").text()
 }
 
