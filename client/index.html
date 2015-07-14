@@ -7,26 +7,35 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
-    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+
   </head>
   <body>
     <div id="main">
-      <h1>Chatterbox</h1>
+      <h1>chatterbox</h1>
+      <div class = "rooms"></div>
+      <form id = "send">
+            Username <div>
+           <input id = "username" class="username" type="text" placeholder="Please type in your username"> 
+           <div></div>
+           <br>Message </br>
+           <input id="message" class="text" type="text" placeholder="Please type in your message"> <br><div>
+           <br> Please select a room </br>
+           <select class="roomOption" id="roomSelect" type="text" placeholder="New Room"> </select>
+           <div></div>
+          <br> Create a Room </br>
+          <input id="room" type="text">
+           <button href="#" id="submit">Submit</button>
+      </form>
+
+      <div class="current-room"></div>
+      <div class="message">
+      <div class="friendsList"></div>
+      <div id="chats">  
       <!-- Your HTML goes here! -->
-      <h3> Welcome to Our Fun ChatterBox! </h3>
-
-      <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-      <div id="roomSelect"></div>
-      <div id="chats"></div>
-     
-     <form id = "send">
-       Messages <input id="messages" type = "text" size="63" />
-        <input class = "submit" type = "submit">
-    </form>
-
     </div>
   </body>
 </html>
