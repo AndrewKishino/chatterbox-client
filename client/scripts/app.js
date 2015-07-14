@@ -4,7 +4,7 @@ var app = {
   rooms : {},
   friends : [],
   // user : window.location.search.slice(10);
-  user : window.location.search.slice(10)
+  user : window.location.search.slice(10),
 };
 
 app.server = 'https://api.parse.com/1/classes/chatterbox';
@@ -12,25 +12,17 @@ app.server = 'https://api.parse.com/1/classes/chatterbox';
 
 
 app.init = function(){
-
-  $('#main').find('.username').on("click", function(){
+  $('#main').find('.username').on('click', function(){
       app.addFriend(this.innerHTML);
   }); 
 
-  $('#send .submit').on('submit', function(){
-    var newMessage = {
-      username: app.user,
-      text: $('#messages').val(),
-      roomname: 'lobby'
-    };
-    app.handleSubmit(newMessage);
-  });
 
 };
 
 app.handleSubmit = function(message){
     this.send(message);
 };
+
 
 app.clearMessages = function(){
   $('#chats').empty();
@@ -71,11 +63,12 @@ app.send = function(message){
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message Sent');
-    },
-    error: function (data) {
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message');
     }
+    // },
+    // error: function (data) {
+    //   // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+    //   console.error('chatterbox: Failed to send message');
+    // }
   });
 };
 
@@ -92,17 +85,16 @@ app.fetch = function(room){
         type: 'GET',
         data : parameters,
         contentType: 'application/json',
-        success: function (responsedata){
+        success: function (){
           app.displayData(responsedata);
-        },
-        error: function (data) {
-          // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-          console.error('chatterbox: Failed to receive message');
         }
+        // },
+        // error: function (data) {
+        //   // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        //   console.error('chatterbox: Failed to receive message');
+        // }
     });
 };
-
-
 
 // $("#usermsg").click(function(){
 //   var message = {
@@ -123,7 +115,29 @@ var messageObj = {
   roomname : $(".roomSelect").text()
 }
 
-$("#submit").click(app.send(messageObj));
+
+
+$(document).ready(function(){
+  app.init();
+
+  $("#submit").click(app.send(messageObj));
+
+  $('#main').find('.username').on('click', function(){
+      app.addFriend(this.innerHTML);
+  }); 
+
+  $('#send .submit').on('submit', function(e){
+    e.preventDefault();
+    var newMessage = {
+      username: app.user,
+      text: $('#messages').val(),
+      roomname: 'lobby'
+    };
+
+    app.handleSubmit(newMessage);
+  });
+})
+
 
 // app.displayData = function(responsedata){
 //   var message = responsedata.results;
